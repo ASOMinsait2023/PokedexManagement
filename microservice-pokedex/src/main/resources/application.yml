@@ -1,0 +1,29 @@
+server:
+  port: 7090
+spring:
+  application:
+    name: msvc-pokedex
+  config:
+    import: optional:configserver:http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:7092/eureka

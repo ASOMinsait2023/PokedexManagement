@@ -1,0 +1,22 @@
+server:
+  port: 7080
+spring:
+  application:
+    name: msvc-trainer
+  config:
+    import: optional:configserver:http://localhost:8888
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:7092/eureka
+
