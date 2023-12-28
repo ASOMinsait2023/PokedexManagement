@@ -14,5 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class PokemonByIdResponse {
-    List<PokemonDTO> pokemonDTOList;
+    Long id;
+    Region region;
+    List<PokemonDTO> pokemonsInRegion;
 }

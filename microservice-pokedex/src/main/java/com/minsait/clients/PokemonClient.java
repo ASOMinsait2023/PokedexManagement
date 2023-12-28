@@ -7,10 +7,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 import java.util.List;
 
-@FeignClient(name = "pokemon", url = "https://pokeapi.co/api/v2/pokemon")
+@FeignClient(name = "pokemon", url = "https://pokeapi.co/api/v2")
 public interface PokemonClient {
-
-    @GetMapping("/{idPokemon}")
-    List<PokemonDTO> findByPokemonId(@PathVariable Long idPokemon);
+    @GetMapping("/pokemon/{idPokemon}")
+    PokemonDTO findPokemonByPokedexId(@PathVariable Long idPokemon);
 
 }

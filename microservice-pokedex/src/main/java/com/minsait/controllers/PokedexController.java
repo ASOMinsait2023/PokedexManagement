@@ -1,6 +1,8 @@
 package com.minsait.controllers;
 
+
 import com.minsait.models.Pokedex;
+import com.minsait.responses.PokemonByIdResponse;
 import com.minsait.services.IPokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,14 +15,14 @@ public class PokedexController {
     @Autowired
     private IPokedexService pokedexService;
 
-    @PostMapping("/create-pokedex")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveCourse(@RequestBody Pokedex pokedex){
-         pokedexService.savePokedex(pokedex);
+    public Pokedex save(@RequestBody Pokedex pokedex){
+        return pokedexService.save(pokedex);
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllCourses(){
+    public ResponseEntity<?> findAllPokedex(){
         return ResponseEntity.ok((pokedexService.findAll()));
     }
 
@@ -29,10 +31,10 @@ public class PokedexController {
         return ResponseEntity.ok(pokedexService.findById(id));
     }
 
-/*    @GetMapping("/search-by-trainer-id/{trainer}")
-    public ResponseEntity<?> findByTeacher(@PathVariable Long trainer){
-        return ResponseEntity.ok(pokedexService.findByTrainerId(trainer));
-    }*/
-
+    @GetMapping("/find-pokemon-by-pokedex-region/{pokedexid}")
+    public ResponseEntity<?> findPokemonByRegion(@PathVariable Long pokedexid) {
+        PokemonByIdResponse response = pokedexService.findPokemonByPokedexId(pokedexid);
+        return ResponseEntity.ok(response);
+    }
 
 }
