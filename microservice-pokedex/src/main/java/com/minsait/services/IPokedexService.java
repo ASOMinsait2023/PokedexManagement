@@ -10,4 +10,5 @@ public interface IPokedexService {
     Pokedex findById(Long id);
     Pokedex save(Pokedex pokedex);
     PokemonByIdResponse findPokemonByPokedexId(Long idPokedex);
+    //List<Pokedex>findAllPokedexByIdTrainer(Long id);
 }

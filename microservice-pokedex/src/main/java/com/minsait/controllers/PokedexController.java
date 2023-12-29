@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/pokedex")
 public class PokedexController {
@@ -31,10 +33,54 @@ public class PokedexController {
         return ResponseEntity.ok(pokedexService.findById(id));
     }
 
-    @GetMapping("/find-pokemon-by-pokedex-region/{pokedexid}")
-    public ResponseEntity<?> findPokemonByRegion(@PathVariable Long pokedexid) {
-        PokemonByIdResponse response = pokedexService.findPokemonByPokedexId(pokedexid);
+    @GetMapping("/find-pokemon-by-pokedex-region/{pokedexId}")
+    public ResponseEntity<?> findPokemonByRegion(@PathVariable Long pokedexId) {
+        PokemonByIdResponse response = pokedexService.findPokemonByPokedexId(pokedexId);
         return ResponseEntity.ok(response);
     }
+    @PatchMapping("/{id}/update-trainer-note")
+    public void updateTrainerNotes(@PathVariable Long id, @RequestBody Map<String, String> requestBody) {
+        Pokedex pokedex = pokedexService.findById(id);
+
+        String trainerNotes = requestBody.get("trainerNotes");
+
+        pokedex.setTrainerNotes(trainerNotes);
+
+        pokedexService.save(pokedex);
+    }
+    @PatchMapping("/{id}/add-trainer-note")
+    public ResponseEntity<?> addTrainerNote(@PathVariable Long id, @RequestBody String newNote) {
+        Pokedex pokedex = pokedexService.findById(id);
+
+        if (pokedex == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String currentNotes = pokedex.getTrainerNotes();
+
+        String updatedNotes = currentNotes + "\n" + newNote;
+
+        pokedex.setTrainerNotes(updatedNotes);
+
+        pokedexService.save(pokedex);
+
+        return ResponseEntity.ok(pokedex);
+    }
+
+    @PatchMapping("/{id}/delete-trainer-notes")
+    public ResponseEntity<?> deleteTrainerNotes(@PathVariable Long id) {
+        Pokedex pokedex = pokedexService.findById(id);
+
+        if (pokedex == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        pokedex.setTrainerNotes("");
+
+        pokedexService.save(pokedex);
+
+        return ResponseEntity.ok(pokedex);
+    }
+
 
 }
