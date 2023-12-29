@@ -16,9 +16,9 @@ public class Trainer {
     private Long id;
     private String name;
     private String hometown;
-    @Column(name = "pokemon_counter")
+//    @Column(name = "pokemon_counter")
 //    private int pokemonCounter;
-//    @Column(name = "id_pokedex")
+    @Column(name = "id_pokedex")
     private Long idPokedex;
 
 

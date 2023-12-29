@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TrainerServiceImplements implements ITrainerService{
@@ -35,12 +36,15 @@ public class TrainerServiceImplements implements ITrainerService{
 
     @Override
     public Trainer save(Trainer trainer) {
+
         trainerRepository.save(trainer);
         return trainer;
     }
 
 
-    public void setTrainerNotes(Long idPokedex, String notes) {
-        pokedexClient.updateTrainerNotes(idPokedex, notes);
+    @Override
+    public void setTrainerNotes(Long id, Map<String, String> updatedNotes) {
+        Long pokedexId = trainerRepository.findById(id).get().getIdPokedex();
+        pokedexClient.updateTrainerNotes(pokedexId, updatedNotes);
     }
 }

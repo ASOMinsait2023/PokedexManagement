@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: msvc-gateway
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: trainer
+          uri: http://localhost:7090
+          predicates:
+            - Path=/api/v1/trainer/**
+        - id: pokedex
+          uri: http://localhost:7080
+          predicates:
+            - Path=/api/v1/pokedex/**
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:7092/eureka

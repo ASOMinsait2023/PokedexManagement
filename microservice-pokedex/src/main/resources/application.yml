@@ -1,5 +1,6 @@
 server:
   port: 7090
+
 spring:
   application:
     name: msvc-pokedex
