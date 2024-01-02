@@ -1,29 +1,8 @@
-server:
-  port: 7080
 spring:
   application:
-    name: msvc-trainer
+    name: microservice-trainer
   config:
     import: optional:configserver:http://localhost:8888
-  jpa:
-    hibernate:
-      ddl-auto: none
-  datasource:
-    url: ${DATABASE_URL}/pokedex
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    service-url:
-      defaultZone: http://localhost:7092/eureka
-
+feign:
+  okhttp:
+    enabled=true

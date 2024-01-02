@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "pokedex")
@@ -21,4 +23,7 @@ public class Pokedex {
     private String description;
     @Column(name = "trainer_notes")
     private String trainerNotes;
+
+    @OneToMany(mappedBy = "pokedex")
+    private List<Pokemon> pokemons;
 }

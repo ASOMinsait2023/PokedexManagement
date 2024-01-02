@@ -47,4 +47,5 @@ public class TrainerServiceImplements implements ITrainerService{
         Long pokedexId = trainerRepository.findById(id).get().getIdPokedex();
         pokedexClient.updateTrainerNotes(pokedexId, updatedNotes);
     }
+
 }
