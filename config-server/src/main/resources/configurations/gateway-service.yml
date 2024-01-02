@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: trainers
+          uri: lb://microservice-trainer
+          predicates:
+            - Path=/api/v1/trainer/**
+        - id: pokedex
+          uri: lb://microservice-pokedex
+          predicates:
+            - Path=/api/v1/pokedex/**
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: true
