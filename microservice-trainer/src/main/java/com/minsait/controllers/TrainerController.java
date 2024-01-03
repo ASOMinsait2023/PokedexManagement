@@ -1,10 +1,10 @@
 package com.minsait.controllers;
 
-import com.minsait.clients.PokedexClient;
+
+import com.minsait.DTO.PokedexDTO;
+import com.minsait.DTO.PokemonFoundDTO;
 import com.minsait.models.Trainer;
-import com.minsait.responses.PokedexResponse;
 import com.minsait.services.ITrainerService;
-import com.minsait.services.TrainerServiceImplements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +26,28 @@ public class TrainerController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllStudent(){
-        return ResponseEntity.ok((trainerService.findAll()));
+    public ResponseEntity<?> findAllTrainers(){
+        return ResponseEntity.ok(trainerService.findAll());
     }
 
     @GetMapping("/{id}")
-
     public ResponseEntity<?> findById(@PathVariable Long id){
         return  ResponseEntity.ok(trainerService.findById(id));
     }
 
-    @GetMapping("/search-by-id")
-    public ResponseEntity<?> findByIdWithParam(@RequestParam Long id) {
-        try {
-            Trainer student = trainerService.findById(id);
-            return ResponseEntity.ok(student);
-        }catch (NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
+    @PatchMapping("/{id}/update-trainer-notes")
+    public void updateTrainerNotes(@PathVariable Long id, @RequestBody Map<String, String> updatedNotes) {
+        trainerService.setTrainerNotes(id, updatedNotes);
+    }
+
+    @PatchMapping("/{id}/add-trainer-notes")
+    public void addTrainerNotes(@PathVariable Long id, @RequestBody String newNotes) {
+
+        trainerService.addTrainerNote(id, newNotes);
+    }
+    @PatchMapping("/{id}/delete-all-trainer-notes")
+    public void deleteTrainerNotes(@PathVariable Long id) {
+        trainerService.deleteTrainerNotes(id);
     }
 
     @GetMapping("/hi")
@@ -51,9 +55,26 @@ public class TrainerController {
         return "Hi!";
     }
 
-    @PatchMapping("/{id}/update-trainer-notes")
-    public void updateTrainerNotes(@PathVariable Long id, @RequestBody Map<String, String> updatedNotes) {
 
-       trainerService.setTrainerNotes(id, updatedNotes);
+    @GetMapping("/find-by-pokemon-id/{id}")
+    ResponseEntity<?> findByIdPokemon(@PathVariable Byte id){
+
+        return ResponseEntity.ok(trainerService.findByIdPokemon(id).getBody());
     }
+
+    @PostMapping("/found-register")
+    @ResponseStatus(HttpStatus.CREATED)
+    ResponseEntity<String> savePokemonFound(@RequestBody PokemonFoundDTO pokemonFound){
+
+        trainerService.savePokemonFound(pokemonFound);
+        return ResponseEntity.ok("New Pokemon registered in your Pokedex");
+    }
+
+    @GetMapping("/found-pokemons-by-trainer-pokedex-id/{trainerId}")
+    public ResponseEntity<?> foundPokemonsByTrainerPokedexId(@PathVariable Long trainerId) {
+
+        return ResponseEntity.ok(trainerService.foundPokemonsByTrainerPokedexId(trainerId).getBody());
+    }
+
+
 }

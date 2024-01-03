@@ -1,21 +1,20 @@
 package com.minsait.DTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class PokedexDTO {
     private Long id;
     private String region;
     private String description;
     private String trainerNotes;
-    private List<PokemonDTO> pokemons;
+    private List<PokemonFoundDTO> pokemonFound;
 }

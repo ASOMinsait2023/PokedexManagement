@@ -1,6 +1,7 @@
 package com.minsait.responses;
 
 import com.minsait.DTO.PokemonDTO;
+import com.minsait.models.PokemonFound;
 import com.minsait.models.Region;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,5 @@ public class PokemonByIdResponse {
     Long id;
     Region region;
     List<PokemonDTO> pokemonsInRegion;
+    List<PokemonDTO> pokemonFoundList;
 }

@@ -11,13 +11,17 @@ spring:
           enabled: true
       routes:
         - id: trainers
-          uri: lb://microservice-trainer
+          uri: http://localhost:7080
           predicates:
             - Path=/api/v1/trainer/**
         - id: pokedex
-          uri: lb://microservice-pokedex
+          uri: http://localhost:7090
           predicates:
             - Path=/api/v1/pokedex/**
+        - id: pokemonfound
+          uri: http://localhost:7090
+          predicates:
+            - Path=/api/v1/pokemonfound/**
 
 eureka:
   instance:

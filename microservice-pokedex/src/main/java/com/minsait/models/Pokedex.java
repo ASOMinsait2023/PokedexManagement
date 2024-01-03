@@ -1,5 +1,6 @@
 package com.minsait.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class Pokedex {
     private String trainerNotes;
 
     @OneToMany(mappedBy = "pokedex")
-    private List<Pokemon> pokemons;
+    @JsonManagedReference
+    private List<PokemonFound> pokemonFound;
 }
