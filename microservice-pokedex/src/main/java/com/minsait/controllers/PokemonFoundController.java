@@ -34,7 +34,7 @@ public class PokemonFoundController {
             }
 
             pokemonService.save(pokemon);
-            return ResponseEntity.ok("New Pokemon registered in your Pokedex");
+        return ResponseEntity.status(HttpStatus.CREATED).body("New Pokemon registered in your Pokedex");
     }
 
 

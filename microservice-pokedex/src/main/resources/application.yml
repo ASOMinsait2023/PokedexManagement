@@ -3,3 +3,10 @@ spring:
     name: microservice-pokedex
   config:
     import: optional:configserver:http://localhost:8888
+
+management:
+  server:
+    port: 9090
+
+springdoc:
+  swagger-ui.path: /swagger-ui.html

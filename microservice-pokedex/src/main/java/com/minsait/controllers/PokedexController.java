@@ -97,7 +97,8 @@ public class PokedexController {
         Pokedex pokedex = Optional.ofNullable(pokedexService.findById(id))
                 .orElseThrow(NoSuchElementException::new);
 
-        String updatedNotes = pokedex.getTrainerNotes() + " --- " + newNote;
+        String existingNotes  = pokedex.getTrainerNotes();
+        String updatedNotes = (existingNotes != null) ? existingNotes + " --- " + newNote : newNote;
 
         pokedex.setTrainerNotes(updatedNotes);
 
