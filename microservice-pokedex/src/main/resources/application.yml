@@ -3,6 +3,13 @@ spring:
     name: microservice-pokedex
   config:
     import: optional:configserver:http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: ${DATABASE_URL}/pokedex
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
 management:
   server:
@@ -10,3 +17,4 @@ management:
 
 springdoc:
   swagger-ui.path: /swagger-ui.html
+

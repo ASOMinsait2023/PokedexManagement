@@ -21,29 +21,26 @@ public class PokedexController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Pokedex save(@Valid @RequestBody Pokedex pokedex){
-        Pokedex pokedexOptional = Optional.ofNullable(pokedexService.findById(pokedex.getId()))
-                .orElseThrow(NoSuchElementException::new);
-        return pokedexService.save(pokedexOptional);
+    public Pokedex save(@RequestBody @Valid Pokedex pokedex){
+
+        return pokedexService.save(pokedex);
     }
 
     @GetMapping
     @Transactional(readOnly = true)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> findAllPokedex(){
-        return ResponseEntity.ok((pokedexService.findAll()));
+        return ResponseEntity.ok(pokedexService.findAll());
     }
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> findById(@PathVariable Long id){
         try{
             return ResponseEntity.ok(pokedexService.findById(id));
         }catch (NoSuchElementException e){
             throw new NoSuchElementException("Element not found");
         }
-
     }
 
     @GetMapping("/find-pokemon-by-pokedex-region/{pokedexId}")
@@ -58,9 +55,10 @@ public class PokedexController {
         Map<String, Object> jsonResponse = new LinkedHashMap<>();
         jsonResponse.put("id", response.getId());
         jsonResponse.put("region", response.getRegion());
-        jsonResponse.put("pokemonsInRegion:", response.getPokemonsInRegion());
+        jsonResponse.put("pokemonsInRegion", response.getPokemonsInRegion());
         return ResponseEntity.ok(jsonResponse);
     }
+
 
     @Transactional(readOnly = true)
     @GetMapping("/found-pokemons-by-pokedex-id/{pokedexId}")
@@ -78,6 +76,7 @@ public class PokedexController {
 
         return ResponseEntity.ok(response);
     }
+
     @PatchMapping("/{id}/update-trainer-note")
     @ResponseStatus(HttpStatus.OK)
     public void updateTrainerNotes(@PathVariable Long id, @Valid @RequestBody Map<String, String> requestBody) {
@@ -117,7 +116,7 @@ public class PokedexController {
 
         pokedexService.save(pokedex);
 
-        return ResponseEntity.ok(pokedex);
+        return ResponseEntity.noContent().build();
     }
 
 

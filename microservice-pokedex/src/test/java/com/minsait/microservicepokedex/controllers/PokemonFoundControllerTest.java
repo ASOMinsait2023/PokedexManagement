@@ -42,7 +42,7 @@ public class PokemonFoundControllerTest {
         pokemonFound.setIdPokemon(1L);
 
         Pokedex pokedex = new Pokedex();
-        pokedex.setId(1L);
+        pokedex.setId(1L); // Configura el ID de Pokedex
 
         pokemonFound.setPokedex(pokedex);
 

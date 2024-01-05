@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 public class ControllerAdviserTest {
 
     @InjectMocks
@@ -32,7 +33,7 @@ public class ControllerAdviserTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody()).isInstanceOf(Map.class); // Verifica que el cuerpo sea un mapa
+        assertThat(responseEntity.getBody()).isInstanceOf(Map.class);
         Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
         assertThat(responseBody).containsEntry("status", "404");
         assertThat(responseBody).containsEntry("Error, ", "Resource not found");
