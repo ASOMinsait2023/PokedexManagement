@@ -4,14 +4,14 @@ package com.minsait.controllers;
 import com.minsait.models.Pokedex;
 import com.minsait.responses.PokemonByIdResponse;
 import com.minsait.services.IPokedexService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/pokedex")
@@ -21,33 +21,53 @@ public class PokedexController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Pokedex save(@RequestBody Pokedex pokedex){
+    public Pokedex save(@RequestBody @Valid Pokedex pokedex){
+
         return pokedexService.save(pokedex);
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> findAllPokedex(){
-        return ResponseEntity.ok((pokedexService.findAll()));
+        return ResponseEntity.ok(pokedexService.findAll());
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> findById(@PathVariable Long id){
-        return ResponseEntity.ok(pokedexService.findById(id));
+        try{
+            return ResponseEntity.ok(pokedexService.findById(id));
+        }catch (NoSuchElementException e){
+            throw new NoSuchElementException("Element not found");
+        }
     }
 
     @GetMapping("/find-pokemon-by-pokedex-region/{pokedexId}")
+    @Transactional(readOnly = true)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> findPokemonByRegion(@PathVariable Long pokedexId) {
-        PokemonByIdResponse response = pokedexService.findPokemonByPokedexId(pokedexId);
+
+        Pokedex pokedexOptional = Optional.ofNullable(pokedexService.findById(pokedexId))
+                .orElseThrow(NoSuchElementException::new);
+
+        PokemonByIdResponse response = pokedexService.findPokemonByPokedexId(pokedexOptional.getId());
         Map<String, Object> jsonResponse = new LinkedHashMap<>();
         jsonResponse.put("id", response.getId());
         jsonResponse.put("region", response.getRegion());
-        jsonResponse.put("pokemonsInRegion:", response.getPokemonsInRegion());
+        jsonResponse.put("pokemonsInRegion", response.getPokemonsInRegion());
         return ResponseEntity.ok(jsonResponse);
     }
 
+
+    @Transactional(readOnly = true)
     @GetMapping("/found-pokemons-by-pokedex-id/{pokedexId}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> foundPokemonsByPokedexId(@PathVariable Long pokedexId) {
-        PokemonByIdResponse pokemonFound = pokedexService.foundPokemonsByPokedexId(pokedexId);
+        Pokedex pokedexOptional = Optional.ofNullable(pokedexService.findById(pokedexId))
+                .orElseThrow(NoSuchElementException::new);
+
+        PokemonByIdResponse pokemonFound = pokedexService.foundPokemonsByPokedexId(pokedexOptional.getId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("id", pokemonFound.getId());
@@ -56,9 +76,13 @@ public class PokedexController {
 
         return ResponseEntity.ok(response);
     }
+
     @PatchMapping("/{id}/update-trainer-note")
-    public void updateTrainerNotes(@PathVariable Long id, @RequestBody Map<String, String> requestBody) {
-        Pokedex pokedex = pokedexService.findById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public void updateTrainerNotes(@PathVariable Long id, @Valid @RequestBody Map<String, String> requestBody) {
+        Pokedex pokedex = Optional.ofNullable(pokedexService.findById(id))
+                .orElseThrow(NoSuchElementException::new);
+
 
         String trainerNotes = requestBody.get("trainerNotes");
 
@@ -67,10 +91,13 @@ public class PokedexController {
         pokedexService.save(pokedex);
     }
     @PatchMapping("/{id}/add-trainer-note")
-    public ResponseEntity<?> addTrainerNote(@PathVariable Long id, @RequestBody String newNote) {
-        Pokedex pokedex = pokedexService.findById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> addTrainerNote(@PathVariable Long id, @Valid @RequestBody String newNote) {
+        Pokedex pokedex = Optional.ofNullable(pokedexService.findById(id))
+                .orElseThrow(NoSuchElementException::new);
 
-        String updatedNotes = pokedex.getTrainerNotes() + " --- " + newNote;
+        String existingNotes  = pokedex.getTrainerNotes();
+        String updatedNotes = (existingNotes != null) ? existingNotes + " --- " + newNote : newNote;
 
         pokedex.setTrainerNotes(updatedNotes);
 
@@ -80,14 +107,16 @@ public class PokedexController {
     }
 
     @PatchMapping("/{id}/delete-all-trainer-notes")
-    public ResponseEntity<?> deleteTrainerNotes(@PathVariable Long id) {
-        Pokedex pokedex = pokedexService.findById(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteTrainerNotes(@Valid @PathVariable Long id) {
+        Pokedex pokedex = Optional.ofNullable(pokedexService.findById(id))
+                .orElseThrow(NoSuchElementException::new);
 
         pokedex.setTrainerNotes("");
 
         pokedexService.save(pokedex);
 
-        return ResponseEntity.ok(pokedex);
+        return ResponseEntity.noContent().build();
     }
 
 

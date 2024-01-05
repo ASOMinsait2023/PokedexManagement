@@ -23,13 +23,11 @@ public class PokedexServiceImplements implements IPokedexService{
     @Autowired
     private PokemonClient pokemonClient;
     @Override
-    @Transactional(readOnly = true)
     public List<Pokedex> findAll() {
         return pokedexRepository.findAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Pokedex findById(Long id) {
         return pokedexRepository.findById(id).orElseThrow();
     }
@@ -41,7 +39,6 @@ public class PokedexServiceImplements implements IPokedexService{
     }
 
     @Override
-    @Transactional(readOnly = true)
     public PokemonByIdResponse findPokemonByPokedexId(Long id) {
         Pokedex pokedex = pokedexRepository.findById(id).orElseThrow();
         List<PokemonDTO> pokemonDTOList = new ArrayList<>();

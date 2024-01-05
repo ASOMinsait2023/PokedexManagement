@@ -6,3 +6,10 @@ spring:
 feign:
   okhttp:
     enabled=true
+
+management:
+  server:
+    port: 9091
+
+springdoc:
+  swagger-ui.path: /swagger-ui.html
